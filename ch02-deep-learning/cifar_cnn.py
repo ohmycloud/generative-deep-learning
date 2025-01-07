@@ -63,3 +63,31 @@ for i, idx in enumerate(indices):
     ax.text(0.5, -0.7, 'act = ' + str(actual_single[idx]), fontsize=10,
             ha='center', transform=ax.transAxes)
     ax.imshow(img)
+
+# A Conv2D layer applied to grayscale input images
+input_layer = layers.Input(shape=(64, 64, 1))
+conv_layer_1 = layers.Conv2D(
+    filters = 2,
+    kernel_size = (3, 3),
+    strides = 1,
+    padding = "same"
+)(input_layer)
+
+# build a convolutional neural network model using Keras
+input_layer = layers.Input(shape=(32, 32, 3))
+conv_layer_1 = layers.Conv2D(
+    filters = 10,
+    kernel_size = (4, 4),
+    strides = 2,
+    padding = 'same'
+)(input_layer)
+
+conv_layer_2 = layers.Conv2D(
+    filters = 20,
+    kernel_size = (3, 3),
+    strides = 2,
+    padding = 'same'
+)(conv_layer_1)
+flatten_layer = layers.Flatten()(conv_layer_2)
+output_layer = layers.Dense(units=10, activation = 'softmax')(flatten_layer)
+model = models.Model(input_layer, output_layer)
