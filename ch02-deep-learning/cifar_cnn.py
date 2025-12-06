@@ -23,7 +23,8 @@ y_test = utils.to_categorical(y_test, NUM_CLASSES)
 
 # 使用 Sequential 模型构建我们的多层感知机
 model = models.Sequential([
-    layers.Flatten(input_shape=(32, 32, 3)),
+    layers.Input(shape=(32, 32, 3)),
+    layers.Flatten(),
     layers.Dense(200, activation='relu'),
     layers.Dense(150, activation='relu'),
     layers.Dense(10, activation='softmax'),
