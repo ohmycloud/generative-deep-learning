@@ -46,28 +46,41 @@ x = layers.Dense(units=150, activation='relu')(x)
 output_layer = layers.Dense(units=10, activation='softmax')(x)
 model = models.Model(input_layer, output_layer)
 # 检查网络每一层的形状
+# 32 * 32 * 3 = 3072, 200 * (3072 + 1) = 614600, 150 * (200 + 1) = 30150, 10 * (150 + 1) = 1510
 print(model.summary())
 
+# 定义优化器和损失函数以编译模型
+# 优化器是用于根据损失函数的梯度更新神经网络中权重的算法
 opt = optimizers.Adam(learning_rate=0.0005)
+# 损失函数被神经网络用来将其预测输出与真实标签进行比较,
+# 它为每个观测值返回一个数字；这个数字越大，网络在该观测值上的表现就越差。
 model.compile(loss='categorical_crossentropy', optimizer=opt,
               metrics=['accuracy'])
 
-model.fit(x_train,
-          y_train,
-          batch_size = 32,
-          epochs = 20,
-          shuffle = True
+model.fit(x_train,          # 原始图像数据
+          y_train,          # one-hot 编码的类别标签
+          batch_size = 32,  # batch_size 决定在每个训练步骤中向网络传递多少观测值
+          epochs = 20,      # epochs 决定网络将训练多少次
+          shuffle = True    # 在每个训练步骤中将从训练数据中随机无放回地抽取批次
 )
 
+# 评估模型在测试集(从未见过的数据)上的性能
 model.evaluate(x_test, y_test)
 
+# 使用 predict 方法查看测试集上的预测
 CLASSES = np.array(['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog',
                     'frog', 'horse', 'ship', 'truck'])
 
+# preds 是一个形状为[10000, 10]的数组,
+# 即每个观测值对应的10个类别概率的向量
 preds = model.predict(x_test)
+# 我们使用numpy的argmax 函数将这个概率数组转换回单个预测。这里，
+# axis = –1 告诉该函数在最后一个维度（类别维度）上折叠数组，使得
+# preds_single 的形状变为 [10000, 1]
 preds_single = CLASSES[np.argmax(preds, axis = -1)]
 actual_single = CLASSES[np.argmax(y_test, axis = -1)]
 
+# 显示多层感知机 (MLP) 的预测与实际标签对比
 n_to_show = 10
 indices = np.random.choice(range(len(x_test)), n_to_show)
 
