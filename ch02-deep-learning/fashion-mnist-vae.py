@@ -90,3 +90,7 @@ plt.show()
 mins, maxs = np.min(embeddings, axis=0), np.max(embeddings, axis=0)
 sample = np.random.uniform(mins, maxs, size=(18, 2))
 reconstructions = decoder.predict(sample)
+
+plt.figure(figsize = (8, 8))
+plt.scatter(reconstructions[:, 0], reconstructions[:, 1], c="blue", alpha=0.5, s=3)
+plt.show()
